@@ -5,6 +5,7 @@ import Input from "@/components/atoms/Input";
 import Select from "@/components/atoms/Select";
 import Label from "@/components/atoms/Label";
 import { format } from "date-fns";
+import { toast } from "react-toastify";
 
 const DealModal = ({ 
   isOpen, 
@@ -13,7 +14,7 @@ const DealModal = ({
   deal = null,
   categories = [] 
 }) => {
-  const [formData, setFormData] = useState({
+const [formData, setFormData] = useState({
     name: "",
     price: "",
     purchaseDate: format(new Date(), "yyyy-MM-dd"),
@@ -22,6 +23,8 @@ const DealModal = ({
     url: "",
     notes: ""
   });
+  
+  const [isGeneratingDescription, setIsGeneratingDescription] = useState(false);
 
   const [errors, setErrors] = useState({});
 
@@ -50,10 +53,48 @@ purchaseDate: deal.purchaseDate ? format(new Date(deal.purchaseDate), "yyyy-MM-d
     setErrors({});
   }, [deal, isOpen]);
 
-  const handleChange = (field, value) => {
+const handleChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: null }));
+    }
+  };
+
+  const generateDescription = async () => {
+    if (!formData.name.trim()) {
+      toast.error("Please enter a deal name first");
+      return;
+    }
+
+    setIsGeneratingDescription(true);
+    try {
+      const { ApperClient } = window.ApperSDK;
+      const apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
+
+      const result = await apperClient.functions.invoke('VITE_GENERATE_DESCRIPTION', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          dealName: formData.name.trim()
+        })
+      });
+
+      if (result.success) {
+        handleChange('description', result.description);
+        toast.success("Description generated successfully!");
+      } else {
+        toast.error(result.error || "Failed to generate description");
+      }
+    } catch (error) {
+      console.error('Error generating description:', error);
+      toast.error("Failed to generate description. Please try again.");
+    } finally {
+      setIsGeneratingDescription(false);
     }
   };
 
@@ -183,12 +224,37 @@ const dealData = {
             </div>
 
             <div>
-              <Label htmlFor="description">Description</Label>
+<div className="flex items-center justify-between">
+                <Label htmlFor="description">Description</Label>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={generateDescription}
+                  disabled={isGeneratingDescription || !formData.name.trim()}
+                  className="text-gold-600 hover:text-gold-700 text-sm flex items-center gap-1"
+                >
+                  {isGeneratingDescription ? (
+                    <>
+                      <svg className="animate-spin w-3 h-3" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Generating...
+                    </>
+                  ) : (
+                    <>
+                      <ApperIcon name="Sparkles" className="w-3 h-3" />
+                      Generate
+                    </>
+                  )}
+                </Button>
+              </div>
               <textarea
                 id="description"
                 value={formData.description}
                 onChange={(e) => handleChange("description", e.target.value)}
-                placeholder="What does this deal offer?"
+                placeholder="What does this deal offer? (or click Generate to create automatically)"
                 rows={3}
                 className="w-full px-4 py-3 border border-surface-300 rounded-lg focus:ring-2 focus:ring-gold-400 focus:border-gold-400 transition-colors duration-200 bg-white placeholder:text-surface-400 resize-none"
               />
