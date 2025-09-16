@@ -50,8 +50,8 @@ const Dashboard = () => {
   const filteredDeals = useMemo(() => {
     return deals.filter(deal => {
       const matchesSearch = searchTerm === "" || 
-        deal.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        deal.description.toLowerCase().includes(searchTerm.toLowerCase());
+deal.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        deal.description?.toLowerCase().includes(searchTerm.toLowerCase());
         
       const matchesCategory = selectedCategory === "" || deal.category === selectedCategory;
       
@@ -76,8 +76,8 @@ const Dashboard = () => {
   const handleSaveDeal = async (dealData) => {
     try {
       if (editingDeal) {
-        const updatedDeal = await dealService.update(editingDeal.id, dealData);
-        setDeals(prev => prev.map(d => d.id === editingDeal.id ? updatedDeal : d));
+const updatedDeal = await dealService.update(editingDeal.Id, dealData);
+        setDeals(prev => prev.map(d => d.Id === editingDeal.Id ? updatedDeal : d));
         toast.success("Deal updated successfully!");
       } else {
         const newDeal = await dealService.create(dealData);
@@ -97,8 +97,8 @@ const Dashboard = () => {
     if (!window.confirm("Are you sure you want to delete this deal?")) return;
     
     try {
-      await dealService.delete(dealId);
-      setDeals(prev => prev.filter(d => d.id !== dealId));
+await dealService.delete(dealId);
+      setDeals(prev => prev.filter(d => d.Id !== dealId));
       toast.success("Deal deleted successfully!");
     } catch (err) {
       toast.error("Failed to delete deal. Please try again.");
@@ -108,16 +108,15 @@ const Dashboard = () => {
 
   const handleToggleUsage = async (dealId) => {
     try {
-      const deal = deals.find(d => d.id === dealId);
+const deal = deals.find(d => d.Id === dealId);
       if (!deal) return;
       
-      const updatedDeal = await dealService.update(dealId, {
-        ...deal,
+const updatedDeal = await dealService.update(dealId, {
         isUsed: !deal.isUsed,
         lastAccessed: !deal.isUsed ? new Date().toISOString() : deal.lastAccessed
       });
       
-      setDeals(prev => prev.map(d => d.id === dealId ? updatedDeal : d));
+      setDeals(prev => prev.map(d => d.Id === dealId ? updatedDeal : d));
       toast.success(`Deal marked as ${!deal.isUsed ? "used" : "unused"}!`);
     } catch (err) {
       toast.error("Failed to update deal status. Please try again.");

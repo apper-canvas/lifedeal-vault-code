@@ -30,7 +30,7 @@ const DealModal = ({
       setFormData({
         name: deal.name || "",
         price: deal.price?.toString() || "",
-        purchaseDate: deal.purchaseDate ? format(new Date(deal.purchaseDate), "yyyy-MM-dd") : format(new Date(), "yyyy-MM-dd"),
+purchaseDate: deal.purchaseDate ? format(new Date(deal.purchaseDate), "yyyy-MM-dd") : format(new Date(), "yyyy-MM-dd"),
         category: deal.category || "",
         description: deal.description || "",
         url: deal.url || "",
@@ -84,10 +84,10 @@ const DealModal = ({
     e.preventDefault();
     if (!validateForm()) return;
 
-    const dealData = {
+const dealData = {
       ...formData,
       price: parseFloat(formData.price),
-      id: deal?.id || Date.now().toString()
+      purchaseDate: formData.purchaseDate
     };
 
     onSave(dealData);
@@ -150,8 +150,8 @@ const DealModal = ({
                 className={errors.category ? "border-red-300 focus:border-red-400 focus:ring-red-400" : ""}
               >
                 <option value="">Select a category</option>
-                {categories.map((category) => (
-                  <option key={category.id} value={category.name}>
+{categories.map((category) => (
+                  <option key={category.Id} value={category.name}>
                     {category.name}
                   </option>
                 ))}

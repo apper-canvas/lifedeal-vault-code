@@ -15,7 +15,7 @@ const CategoryFilter = ({
     >
       <option value="">All Categories</option>
       {categories.map((category) => (
-        <option key={category.id} value={category.name}>
+<option key={category.Id} value={category.name}>
           {category.name} ({category.dealCount})
         </option>
       ))}

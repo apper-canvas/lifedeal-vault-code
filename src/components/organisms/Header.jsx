@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import ApperIcon from "@/components/ApperIcon";
 import Button from "@/components/atoms/Button";
-
+import { AuthContext } from "../../App";
 const Header = ({ totalDeals, onAddDeal }) => {
+  const { logout } = useContext(AuthContext);
   return (
     <header className="bg-gradient-to-r from-primary-600 to-primary-500 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -20,15 +21,24 @@ const Header = ({ totalDeals, onAddDeal }) => {
               </p>
             </div>
           </div>
-          
-          <Button 
-            onClick={onAddDeal}
-            variant="secondary"
-            className="bg-gold-500 border-gold-500 text-white hover:bg-gold-600 hover:border-gold-600"
-          >
-            <ApperIcon name="Plus" className="w-5 h-5 mr-2" />
-            Add Deal
-          </Button>
+<div className="flex items-center space-x-3">
+            <Button 
+              onClick={onAddDeal}
+              variant="secondary"
+              className="bg-gold-500 border-gold-500 text-white hover:bg-gold-600 hover:border-gold-600"
+            >
+              <ApperIcon name="Plus" className="w-5 h-5 mr-2" />
+              Add Deal
+            </Button>
+            <Button 
+              onClick={logout}
+              variant="ghost"
+              className="text-white hover:bg-white/10"
+            >
+              <ApperIcon name="LogOut" className="w-5 h-5 mr-2" />
+              Logout
+            </Button>
+          </div>
         </div>
       </div>
     </header>
