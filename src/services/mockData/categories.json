@@ -1,0 +1,50 @@
+[
+  {
+    "Id": 1,
+    "name": "Productivity",
+    "color": "#2196f3",
+    "dealCount": 1
+  },
+  {
+    "Id": 2,
+    "name": "Design",
+    "color": "#9c27b0",
+    "dealCount": 2
+  },
+  {
+    "Id": 3,
+    "name": "Marketing",
+    "color": "#4caf50",
+    "dealCount": 1
+  },
+  {
+    "Id": 4,
+    "name": "Development",
+    "color": "#3f51b5",
+    "dealCount": 1
+  },
+  {
+    "Id": 5,
+    "name": "Business",
+    "color": "#ff9800",
+    "dealCount": 1
+  },
+  {
+    "Id": 6,
+    "name": "Analytics",
+    "color": "#e91e63",
+    "dealCount": 1
+  },
+  {
+    "Id": 7,
+    "name": "Communication",
+    "color": "#009688",
+    "dealCount": 1
+  },
+  {
+    "Id": 8,
+    "name": "Other",
+    "color": "#757575",
+    "dealCount": 0
+  }
+]
